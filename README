@@ -1,0 +1,189 @@
+# These steps assume you've booted in UEFI mode by preparing your USB stick per these instructions:
+# https://wiki.archlinux.org/index.php/UEFI#Archiso
+
+# Lists Disks
+lsblk
+
+# Wipe Disk Assuming /dev/sda is the target disk
+gdisk /dev/sda
+x
+z
+y
+y
+
+# Create Partitions Assuming /dev/sda is the target disk - 128M Efi System Partition - Remainder as ext4 - (No Swap Partition as using swap file)
+cfdisk /dev/sda
+
+# Create ESP filesystem
+mkfs.vfat -F32 -n efi /dev/sda1
+
+# In this example, I'm using ext4
+mkfs.ext4 /dev/sda2
+
+# Mount Needed Partitions
+mount /dev/sda2 /mnt
+mkdir -p /mnt/boot/efi
+mount -o noatime /dev/sda1 /mnt/boot/efi
+
+# Install as usual
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux-headers systemd-swap bash-completion
+
+# Create fstab
+genfstab -pU /mnt >> /mnt/etc/fstab
+
+# Chroot
+arch-chroot /mnt /bin/bash
+
+# Grub install
+grub-install
+
+# Generate grub.cfg
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Check efi entries
+efibootmgr
+
+# Set Locale + Time + Hwclock
+nano /etc/locale.gen
+# uncomment en_GB.UTF-8 + en_US.UTF-8
+locale-gen
+echo LANG=en_GB.UTF-8 > /etc/locale.conf
+export LANG=en_GB.UTF-8
+ls /usr/share/zoneinfo/
+ln -s /usr/share/zoneinfo/Europe/London > /etc/localtime
+hwclock --systohc --utc
+
+# Set Hostname (hostnamehere is the hostname)
+echo hostnamehere > /etc/hostname
+
+# Add AUR (archlinuxfr) to bottom of pacman.conf + uncomment multilib for 32bit applications
+nano /etc/pacman.conf
+# uncomment "#[multilib]"
+# uncomment "#Include = /etc/pacman.d/mirrorlist"
+# Add AUR on a new line at the bottom
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
+# This is what the parts you have edited should look like
+----------------------------------
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+
+# An example of a custom package repository.  See the pacman manpage for
+# tips on creating your own repositories.
+#[custom]
+#SigLevel = Optional TrustAll
+#Server = file:///home/custompkgs
+
+[archlinuxfr]
+SigLevel = Never
+Server = http://repo.archlinux.fr/$arch
+----------------------------------
+
+# Test AUR + multilib
+pacman -Syu
+
+# Setup Users (username is the user, change to the name that is required)
+passwd
+useradd -m -g users -G wheel,storage,power -s /bin/bash username
+passwd username
+
+# setup sudo for group "wheel" using the root password - must use "EDITOR=nano visudo" command
+EDITOR=nano visudo
+# Search for "#%wheel ALL=(ALL) ALL" and uncomment that line and add this line "Defaults rootpw" below so it looks like the following -
+%wheel ALL=(ALL) ALL
+Defaults rootpw
+
+# Edit Swapfile Config + set max size to 8gb - 16x512mb
+nano /etc/systemd/swap.conf
+"swapfc_enabled=1"
+"swapfc_force_preallocated=1"
+"swapfc_max_count=16"
+
+# Enable Swapfile Service
+systemctl enable systemd-swap
+
+# SSD Only - Enable fstrim Service + run trim once
+systemctl enable fstrim.timer
+fstrim -v /
+
+# Install Cinnamon Desktop Enviroment + LXDM Display Manager + xfce4-terminal + networkmanager + gufw + fonts
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw ttf-dejavu ttf-opensans ttf-liberation
+
+# Edit LXDM Config for cinnamon
+nano /etc/lxdm/lxdm.conf
+"session=/usr/bin/cinnamon-session"
+
+# Enable LXDM Service
+systemctl enable lxdm
+
+# Enable NetworkManager Service
+systemctl enable NetworkManager
+
+# Enable GUFW Firewall
+systemctl enable ufw
+
+# Exit chroot
+exit
+
+# Reboot + Remove Arch USB
+reboot
+
+# After Reboot
+
+# Edit Grub + Install Intel Microcode Updates + install os-prober to find other operating systems + check efi entries
+sudo gedit /etc/default/grub
+sudo pacman -S os-prober intel-ucode
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+efibootmgr
+
+# Install Packages For Intel Hardware Acceleration + Check It Works
+sudo pacman -S libva-intel-driver libva-utils
+vainfo
+
+# Install very useful Packages
+sudo pacman -S gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit
+
+# Install git (required for yay)
+sudo pacman -S git
+
+# Install yay
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+# Install jre-openjdk + Check Java Install
+sudo pacman -S jre-openjdk
+archlinux-java status
+
+# Install Chromium
+sudo pacman -S chromium pepper-flash
+yay -S chromium-widevine
+
+# Disable Hibernation - create this file
+sudo gedit /etc/polkit-1/rules.d/10-disable-hibernation.rules
+
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.login1.hibernate" ||
+        action.id == "org.freedesktop.login1.hibernate-multiple-sessions")
+    {
+        return polkit.Result.NO;
+    }
+});
+
+# reboot
+sudo reboot
+
+# Verify Microcode Update
+dmesg | grep microcode
+
+# Optional
+
+# Install User Preffered Packages
+sudo pacman -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc
+
+# Mount External Disk to /mnt/data in fstab - replace the UUID with your device
+sudo mkdir /mnt/data
+sudo gedit /etc/fstab
+"UUID=7b626ac3-7146-4aa1-a361-ae9fca70198b        /mnt/data    ext4    rw,nofail,x-systemd.device-timeout=5    0  2"
+
