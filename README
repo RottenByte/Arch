@@ -129,36 +129,10 @@ exit
 # Reboot + Remove Arch USB
 reboot
 
-# After Reboot
-
-# Edit Grub + Install Intel Microcode Updates + install os-prober to find other operating systems + check efi entries
-sudo gedit /etc/default/grub
+# Install Intel Microcode Updates + install os-prober to find other operating systems + check efi entries
 sudo pacman -S os-prober intel-ucode
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 efibootmgr
-
-# Install Packages For Intel Hardware Acceleration + Check It Works
-sudo pacman -S libva-intel-driver libva-utils
-vainfo
-
-# Install very useful Packages
-sudo pacman -S gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit
-
-# Install git (required for yay)
-sudo pacman -S git
-
-# Install yay
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-
-# Install jre-openjdk + Check Java Install
-sudo pacman -S jre-openjdk
-archlinux-java status
-
-# Install Chromium
-sudo pacman -S chromium pepper-flash
-yay -S chromium-widevine
 
 # Disable Hibernation - create this file
 sudo gedit /etc/polkit-1/rules.d/10-disable-hibernation.rules
@@ -171,19 +145,59 @@ polkit.addRule(function(action, subject) {
     }
 });
 
+# Install Packages For Intel Hardware Acceleration + Check It Works
+sudo pacman -S libva-intel-driver libva-utils
+vainfo
+
 # reboot
 sudo reboot
 
 # Verify Microcode Update
 dmesg | grep microcode
 
+#
+#
+# Install Complete
+#
+#
+
 # Optional
 
-# Install User Preffered Packages
-sudo pacman -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc
+# Install git (required for yay)
+sudo pacman -S git
+
+# Install yay
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+# Install jre-openjdk + Check Java Install + Set Default if needed (replace java-11-openjdk with your java version)
+sudo pacman -S jre-openjdk
+archlinux-java status
+sudo archlinux-java set java-11-openjdk
+
+# Install Chromium
+sudo pacman -S chromium pepper-flash
+yay -S chromium-widevine
+
+# Install VirtualBox
+sudo pacman -S virtualbox virtualbox-host-modules-arch virtualbox-guest-iso
+sudo modprobe vboxdrv
+yay -S virtualbox-ext-oracle
+# (username is the user, change to the name that is required)
+sudo gpasswd -a username vboxusers
+
+# Useful Packages
+sudo pacman -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc xarchiver zip unzip unrar p7zip cpio ristretto libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit
 
 # Mount External Disk to /mnt/data in fstab - replace the UUID with your device
 sudo mkdir /mnt/data
 sudo gedit /etc/fstab
 "UUID=7b626ac3-7146-4aa1-a361-ae9fca70198b        /mnt/data    ext4    rw,nofail,x-systemd.device-timeout=5    0  2"
 
+# Nuke GnuPG
+sudo rm -fr /etc/pacman.d/gnupg
+sudo pacman-key --init
+sudo pacman-key --populate archlinux
+sudo pacman-key --refresh-keys
+sudo pacman -Syu
