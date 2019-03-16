@@ -1,3 +1,8 @@
+#
+#
+# Everything here is for my own use, be careful if you don't know what you are doing.
+#
+#
 # These steps assume you've booted in UEFI mode by preparing your USB stick per these instructions:
 # https://wiki.archlinux.org/index.php/UEFI#Archiso
 
@@ -14,13 +19,13 @@ y
 # Create Partitions Assuming /dev/sda is the target disk - 128M Efi System Partition - Remainder as ext4 - (No Swap Partition as using swap file)
 cfdisk /dev/sda
 
-# Create ESP filesystem
+# Create ESP filesystem (Assuming /dev/sda1 is the target)
 mkfs.vfat -F32 -n efi /dev/sda1
 
-# In this example, I'm using ext4
+# Format root filesystem as ext4 (Assuming /dev/sda2 is the target)
 mkfs.ext4 /dev/sda2
 
-# Mount Needed Partitions
+# Mount Needed Partitions (Assuming /dev/sda is the target disk)
 mount /dev/sda2 /mnt
 mkdir -p /mnt/boot/efi
 mount -o noatime /dev/sda1 /mnt/boot/efi
@@ -149,7 +154,11 @@ dmesg | grep microcode
 #
 #
 
+#
+#
 # Optional
+#
+#
 
 # Install git (required for yay)
 sudo pacman -S git
