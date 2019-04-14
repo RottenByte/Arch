@@ -31,7 +31,7 @@ mkdir -p /mnt/boot/efi
 mount -o noatime /dev/sda1 /mnt/boot/efi
 
 # Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux-headers systemd-swap bash-completion
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux-headers systemd-swap bash-completion dialog wpa_supplicant
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -48,7 +48,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # Check efi entries
 efibootmgr
 
-# Set Locale + Time + Hwclock
+# Set Locale to en_GB.UTF-8 + Time + Hwclock
 nano /etc/locale.gen
 # uncomment en_GB.UTF-8 + en_US.UTF-8
 locale-gen
