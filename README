@@ -165,7 +165,7 @@ dmesg | grep microcode
 
 #
 #
-# Optional
+# Useful Things
 #
 #
 
@@ -208,3 +208,9 @@ sudo pacman-key --init
 sudo pacman-key --populate archlinux
 sudo pacman-key --refresh-keys
 sudo pacman -Syu
+
+# Show CPU Freq
+watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
+
+# Create Arch USB
+sudo dd bs=4M if=/home/rob/Downloads/archlinux-2019.04.01-x86_64.iso of=/dev/sdc status=progress oflag=sync
