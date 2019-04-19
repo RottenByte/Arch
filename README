@@ -61,6 +61,11 @@ hwclock --systohc --utc
 # Set Hostname (hostnamehere is the hostname)
 echo hostnamehere > /etc/hostname
 
+# Enable ILoveCandy + Colour support in pacman
+nano /etc/pacman.conf
+# uncomment "#Color"
+# add "ILoveCandy" in the misc options part on a new line below "#VerbosePkgLists"
+
 # Enable multilib for 32bit applications
 nano /etc/pacman.conf
 # uncomment "#[multilib]"
@@ -141,6 +146,10 @@ polkit.addRule(function(action, subject) {
 # Install Packages For Intel Hardware Acceleration + Check It Works
 sudo pacman -S libva-intel-driver libva-utils
 vainfo
+
+# Rank Mirrors
+sudo pacman -S reflector
+sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # reboot
 sudo reboot
