@@ -3,8 +3,6 @@
 # Everything here is for my own use, be careful if you don't know what you are doing.
 #
 #
-# Create Arch USB
-sudo dd bs=4M if=/home/rob/Downloads/archlinux-2019.04.01-x86_64.iso of=/dev/sdc status=progress oflag=sync
 
 # Lists Disks
 lsblk
@@ -211,4 +209,8 @@ sudo pacman -Syu
 
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
+
+# Create Arch USB
+sudo dd bs=4M if=/home/user/archlinux.iso of=/dev/sdx status=progress oflag=sync
+
 
