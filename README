@@ -192,7 +192,7 @@ yay -S virtualbox-ext-oracle
 sudo gpasswd -a username vboxusers
 
 # Useful Packages
-sudo pacman -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc xarchiver zip unzip unrar p7zip cpio ristretto libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit
+sudo pacman -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc xarchiver zip unzip unrar p7zip cpio ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit
 
 # Mount External Disk to /mnt/data in fstab - replace the UUID with your device
 sudo mkdir /mnt/data
