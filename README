@@ -175,6 +175,9 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
+# Install broadcom wifi drivers
+yay -S broadcom-wl
+
 # Install jre-openjdk + Check Java Install + Set Default if needed (replace java-11-openjdk with your java version)
 sudo pacman -S jre-openjdk
 archlinux-java status
@@ -209,8 +212,3 @@ sudo pacman -Syu
 
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
-
-# Create Arch USB
-sudo dd bs=4M if=/home/user/archlinux.iso of=/dev/sdx status=progress oflag=sync
-
-
