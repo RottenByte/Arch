@@ -103,8 +103,8 @@ systemctl enable systemd-swap
 systemctl enable fstrim.timer
 fstrim -v /
 
-# Install Cinnamon Desktop Enviroment + LXDM Display Manager + xfce4-terminal + networkmanager + gufw + fonts
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw ttf-dejavu ttf-opensans ttf-liberation
+# Install Cinnamon Desktop Enviroment + LXDM Display Manager + xfce4-terminal + networkmanager + gufw
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
@@ -118,6 +118,9 @@ systemctl enable NetworkManager
 
 # Enable GUFW Firewall
 systemctl enable ufw
+
+# Install Fonts
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts
 
 # Exit chroot
 exit
