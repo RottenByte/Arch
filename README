@@ -178,6 +178,9 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
+# Numix gtk theme
+yay -S numix-gtk-theme
+
 # Install broadcom wifi drivers
 yay -S broadcom-wl
 
