@@ -120,7 +120,7 @@ systemctl enable NetworkManager
 systemctl enable ufw
 
 # Install Fonts
-pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Exit chroot
 exit
@@ -144,8 +144,8 @@ polkit.addRule(function(action, subject) {
     }
 });
 
-# Install Packages For Intel Hardware Acceleration + Check It Works
-sudo pacman -S libva-intel-driver libva-utils
+# Install Packages For Intel Hardware Acceleration + Check It Works, and vulkan support
+sudo pacman -S libva-intel-driver libva-utils vulkan-intel lib32-vulkan-intel
 vainfo
 
 # Rank Mirrors
@@ -178,6 +178,9 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
+# menu editor
+yay -S menulibre
+
 # Numix gtk theme
 yay -S numix-gtk-theme
 
@@ -185,23 +188,26 @@ yay -S numix-gtk-theme
 yay -S broadcom-wl
 
 # Install jre-openjdk + Check Java Install + Set Default if needed (replace java-11-openjdk with your java version)
-sudo pacman -S jre-openjdk
+yay -S jre-openjdk
 archlinux-java status
 sudo archlinux-java set java-11-openjdk
 
 # Install Chromium
-sudo pacman -S chromium pepper-flash
+yay -S chromium pepper-flash
 yay -S chromium-widevine
 
 # Install VirtualBox
-sudo pacman -S virtualbox virtualbox-host-modules-arch virtualbox-guest-iso
+yay -S virtualbox virtualbox-host-modules-arch virtualbox-guest-iso virtualbox-ext-oracle
 sudo modprobe vboxdrv
-yay -S virtualbox-ext-oracle
 # (username is the user, change to the name that is required)
 sudo gpasswd -a username vboxusers
 
 # Useful Packages
-sudo pacman -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc xarchiver zip unzip unrar p7zip cpio ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit
+yay -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc xarchiver zip unzip unrar p7zip cpio ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk spotify
+
+# Install gnome-screenshot and set default save directory
+yay -S gnome-screenshot
+gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures
 
 # Mount External Disk to /mnt/data in fstab - replace the UUID with your device
 sudo mkdir /mnt/data
@@ -218,3 +224,58 @@ sudo pacman -Syu
 
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
+
+
+#
+#
+# QEMU/KVM
+#
+#
+
+
+# Install required packages
+yay -S qemu virt-manager dnsmasq iptables ebtables dnsmasq dmidecode ovmf
+
+# Create this file for uefi ovmf support
+/etc/libvirt/qemu.conf
+
+nvram = [
+    "/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"
+]
+
+# Add user to kvm group (username is the user, change to the name that is required)
+sudo gpasswd -a username kvm
+
+# Create this file with kvm_intel or kvm_amd depending on your system
+/etc/modules-load.d/kvm.conf
+
+kvm_intel
+
+# load module with kvm_intel or kvm_amd depending on your system
+modprobe kvm_intel
+
+# Create polkit rule to allow users in kvm group to manage the libvirt
+daemon without authentication
+/etc/polkit-1/rules.d/50-libvirt.rules
+
+/* Allow users in kvm group to manage the libvirt
+daemon without authentication */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.libvirt.unix.manage" &&
+        subject.isInGroup("kvm")) {
+            return polkit.Result.YES;
+    }
+});
+
+# Add user to the libvirt group (username is the user, change to the name that is required)
+sudo groupadd libvirt
+sudo gpasswd -a username libvirt
+
+# Start and enable the libvirtd daemon
+sudo systemctl start libvirtd
+sudo systemctl enable libvirtd
+
+# Check and start the default network interface
+sudo virsh net-list --all
+sudo virsh net-start default
+sudo virsh net-autostart default
