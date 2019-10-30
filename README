@@ -29,7 +29,7 @@ mkdir -p /mnt/boot/efi
 mount -o noatime /dev/sda1 /mnt/boot/efi
 
 # Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux-headers systemd-swap bash-completion dialog wpa_supplicant
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
