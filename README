@@ -2,6 +2,8 @@
 #
 # Everything here is for my own use, be careful if you don't know what you are doing.
 #
+# This is for a UEFI install only.
+#
 #
 
 # Lists Disks
@@ -164,12 +166,6 @@ dmesg | grep microcode
 #
 #
 
-#
-#
-# Useful Things
-#
-#
-
 # Install git (required for yay)
 sudo pacman -S git
 
@@ -180,9 +176,6 @@ makepkg -si
 
 # menu editor
 yay -S menulibre
-
-# Numix gtk theme
-yay -S numix-gtk-theme
 
 # Install broadcom wifi drivers
 yay -S broadcom-wl
@@ -196,42 +189,24 @@ sudo archlinux-java set java-11-openjdk
 yay -S chromium pepper-flash
 yay -S chromium-widevine
 
+# Useful Packages
+yay -S numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop
+
+# Install gnome-screenshot and set default save directory
+yay -S gnome-screenshot
+gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures
+
 # Install VirtualBox
 yay -S virtualbox virtualbox-host-modules-arch virtualbox-guest-iso virtualbox-ext-oracle
 sudo modprobe vboxdrv
 # (username is the user, change to the name that is required)
 sudo gpasswd -a username vboxusers
 
-# Useful Packages
-yay -S gnome-keyring seahorse mkvtoolnix-cli mkvtoolnix-gui telegram-desktop dconf-editor vlc xarchiver zip unzip unrar p7zip cpio ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk spotify
-
-# Install gnome-screenshot and set default save directory
-yay -S gnome-screenshot
-gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures
-
-# Mount External Disk to /mnt/data in fstab - replace the UUID with your device
-sudo mkdir /mnt/data
-sudo gedit /etc/fstab
-# Add this to the bottom on a new line but change the UUID to your device
-UUID=7b626ac3-7146-4aa1-a361-ae9fca70198b        /mnt/data    ext4    rw,nofail,x-systemd.device-timeout=5    0  2
-
-# Nuke GnuPG
-sudo rm -fr /etc/pacman.d/gnupg
-sudo pacman-key --init
-sudo pacman-key --populate archlinux
-sudo pacman-key --refresh-keys
-sudo pacman -Syu
-
-# Show CPU Freq
-watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
-
-
 #
 #
 # QEMU/KVM
 #
 #
-
 
 # Install required packages
 yay -S qemu virt-manager dnsmasq iptables ebtables dnsmasq dmidecode ovmf
@@ -279,3 +254,25 @@ sudo systemctl enable libvirtd
 sudo virsh net-list --all
 sudo virsh net-start default
 sudo virsh net-autostart default
+
+#
+#
+# Stuff
+#
+#
+
+# Show CPU Freq
+watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
+
+# Mount External Disk to /mnt/data in fstab - replace the UUID with your device
+sudo mkdir /mnt/data
+sudo gedit /etc/fstab
+# Add this to the bottom on a new line but change the UUID to your device
+UUID=7b626ac3-7146-4aa1-a361-ae9fca70198b        /mnt/data    ext4    rw,nofail,x-systemd.device-timeout=5    0  2
+
+# Nuke GnuPG
+sudo rm -fr /etc/pacman.d/gnupg
+sudo pacman-key --init
+sudo pacman-key --populate archlinux
+sudo pacman-key --refresh-keys
+sudo pacman -Syu
