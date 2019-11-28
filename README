@@ -105,8 +105,8 @@ systemctl enable systemd-swap
 systemctl enable fstrim.timer
 fstrim -v /
 
-# Install Cinnamon Desktop Enviroment + LXDM Display Manager + xfce4-terminal + networkmanager + gufw + gedit
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit
+# Install Cinnamon Desktop Enviroment + LXDM Display Manager + xfce4-terminal + networkmanager + gufw + gedit + inetutils
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit inetutils
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
