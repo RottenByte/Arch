@@ -190,7 +190,7 @@ yay -S chromium pepper-flash
 yay -S chromium-widevine
 
 # Useful Packages
-yay -S numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop
+yay -S numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi
 
 # Install gnome-screenshot and set default save directory
 yay -S gnome-screenshot
