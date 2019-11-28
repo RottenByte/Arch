@@ -20,15 +20,15 @@ y
 cfdisk /dev/sda
 
 # Create ESP filesystem (Assuming /dev/sda1 is the target)
-mkfs.vfat -F32 -n efi /dev/sda1
+mkfs.vfat -F32 /dev/sda1
 
 # Format root filesystem as ext4 (Assuming /dev/sda2 is the target)
 mkfs.ext4 /dev/sda2
 
 # Mount Needed Partitions (Assuming /dev/sda is the target disk)
 mount /dev/sda2 /mnt
-mkdir -p /mnt/boot/efi
-mount -o noatime /dev/sda1 /mnt/boot/efi
+mkdir -p /mnt/efi
+mount -o noatime /dev/sda1 /mnt/efi
 
 # Install as usual
 pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano
@@ -40,7 +40,7 @@ genfstab -pU /mnt >> /mnt/etc/fstab
 arch-chroot /mnt /bin/bash
 
 # Grub install
-grub-install
+grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
 
 # Generate grub.cfg
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -106,7 +106,7 @@ systemctl enable fstrim.timer
 fstrim -v /
 
 # Install Cinnamon Desktop Enviroment + LXDM Display Manager + xfce4-terminal + networkmanager + gufw
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
