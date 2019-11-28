@@ -31,7 +31,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/sda1 /mnt/efi
 
 # Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano inetutils git
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -105,8 +105,8 @@ systemctl enable systemd-swap
 systemctl enable fstrim.timer
 fstrim -v /
 
-# Install Cinnamon Desktop Enviroment + LXDM Display Manager + xfce4-terminal + networkmanager + gufw + gedit + inetutils
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit inetutils
+# Install Desktop Enviroment
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
@@ -150,10 +150,6 @@ polkit.addRule(function(action, subject) {
 sudo pacman -S libva-intel-driver libva-utils vulkan-intel lib32-vulkan-intel
 vainfo
 
-# Rank Mirrors
-sudo pacman -S reflector
-sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
 # reboot
 sudo reboot
 
@@ -166,8 +162,9 @@ dmesg | grep microcode
 #
 #
 
-# Install git (required for yay)
-sudo pacman -S git
+# Rank Mirrors
+sudo pacman -S reflector
+sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # Install yay
 git clone https://aur.archlinux.org/yay.git
@@ -180,14 +177,14 @@ yay -S menulibre
 # Install broadcom wifi drivers
 yay -S broadcom-wl
 
-# Install jre-openjdk + Check Java Install + Set Default if needed (replace java-11-openjdk with your java version)
-yay -S jre-openjdk
+# Install jre-openjdk + Check Java Install + Set Default if needed (replace java-8-openjdk with your java version)
+yay -S jre-openjdk jre8-openjdk
 archlinux-java status
-sudo archlinux-java set java-11-openjdk
+sudo archlinux-java set java-8-openjdk
+archlinux-java status
 
 # Install Chromium
-yay -S chromium pepper-flash
-yay -S chromium-widevine
+yay -S chromium pepper-flash chromium-widevine
 
 # Useful Packages
 yay -S numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi
@@ -196,16 +193,9 @@ yay -S numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip u
 yay -S gnome-screenshot
 gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures
 
-# Install VirtualBox
-yay -S virtualbox virtualbox-host-modules-arch virtualbox-guest-iso virtualbox-ext-oracle
-sudo modprobe vboxdrv
-# (username is the user, change to the name that is required)
-sudo gpasswd -a username vboxusers
 
 #
-#
 # QEMU/KVM
-#
 #
 
 # Install required packages
