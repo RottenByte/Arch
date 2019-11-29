@@ -147,7 +147,7 @@ polkit.addRule(function(action, subject) {
 });
 
 # Install Packages For Intel Hardware Acceleration + Check It Works, and vulkan support
-sudo pacman -S libva-intel-driver libva-utils vulkan-intel lib32-vulkan-intel
+sudo pacman -S libva-intel-driver libva-utils vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
 vainfo
 
 # reboot
@@ -187,7 +187,7 @@ archlinux-java status
 yay -S chromium pepper-flash chromium-widevine
 
 # Useful Packages
-yay -S numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi
+yay -S numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi lutris htop
 
 # Install gnome-screenshot and set default save directory
 yay -S gnome-screenshot
