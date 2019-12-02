@@ -162,9 +162,6 @@ dmesg | grep microcode
 #
 #
 
-# Rank Mirrors
-sudo pacman -S reflector
-sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # Install yay
 git clone https://aur.archlinux.org/yay.git
@@ -174,14 +171,21 @@ makepkg -si
 # Install broadcom wifi drivers
 yay -S broadcom-wl
 
+# Install Chromium
+yay -S chromium pepper-flash chromium-widevine
+
 # Install jdk-openjdk + jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
 yay -S jdk-openjdk jdk8-openjdk
 archlinux-java status
 sudo archlinux-java set java-8-openjdk
 archlinux-java status
 
-# Install Chromium
-yay -S chromium pepper-flash chromium-widevine
+# Install android development packages
+yay -S android-tools aosp-devel lineageos-devel maven gradle
+
+# Install gnome-screenshot and set default save directory
+yay -S gnome-screenshot
+gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
 # Install wine + lutris
 yay -S wine wine_gecko wine-mono lutris
@@ -189,9 +193,9 @@ yay -S wine wine_gecko wine-mono lutris
 # Favourite Packages
 yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop
 
-# Install gnome-screenshot and set default save directory
-yay -S gnome-screenshot
-gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures
+# Rank Mirrors
+sudo pacman -S reflector
+sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 
 #
