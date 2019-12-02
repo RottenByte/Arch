@@ -191,10 +191,10 @@ gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/userna
 yay -S wine wine_gecko wine-mono lutris
 
 # Favourite Packages
-yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop
+yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc
 
 # Rank Mirrors
-sudo pacman -S reflector
+yay -S reflector
 sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 
