@@ -181,7 +181,7 @@ sudo archlinux-java set java-8-openjdk
 archlinux-java status
 
 # Install android development packages
-yay -S android-tools aosp-devel lineageos-devel maven gradle
+yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
 
 # Install gnome-screenshot and set default save directory
 yay -S gnome-screenshot
