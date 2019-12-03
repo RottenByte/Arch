@@ -182,6 +182,8 @@ archlinux-java status
 
 # Install android development packages
 yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
+# Add user to uucp group for mtp support (username is the user, change to the name that is required)
+sudo gpasswd -a username uucp
 
 # Install gnome-screenshot and set default save directory
 yay -S gnome-screenshot
