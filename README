@@ -135,17 +135,6 @@ sudo pacman -S os-prober intel-ucode
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 efibootmgr
 
-# Disable Hibernation - create this file
-sudo gedit /etc/polkit-1/rules.d/10-disable-hibernation.rules
-
-polkit.addRule(function(action, subject) {
-    if (action.id == "org.freedesktop.login1.hibernate" ||
-        action.id == "org.freedesktop.login1.hibernate-multiple-sessions")
-    {
-        return polkit.Result.NO;
-    }
-});
-
 # Install Packages For Intel Hardware Acceleration + Check It Works, and vulkan support
 sudo pacman -S libva-intel-driver libva-utils vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
 vainfo
@@ -174,18 +163,23 @@ yay -S broadcom-wl
 # Install Chromium
 yay -S chromium pepper-flash chromium-widevine
 
-# Install jdk-openjdk + jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
-yay -S jdk-openjdk jdk8-openjdk
+# Disable Hibernation - create this file
+sudo gedit /etc/polkit-1/rules.d/10-disable-hibernation.rules
+
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.login1.hibernate" ||
+        action.id == "org.freedesktop.login1.hibernate-multiple-sessions")
+    {
+        return polkit.Result.NO;
+    }
+});
+
+# Install jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
+yay -S jdk8-openjdk
 archlinux-java status
 sudo archlinux-java set java-8-openjdk
-archlinux-java status
 
-# Install android development packages
-yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
-# Add user to uucp group for mtp support (username is the user, change to the name that is required)
-sudo gpasswd -a username uucp
-
-# Install gnome-screenshot and set default save directory
+# Install gnome-screenshot and set default save directory (username is the user, change to the name that is required)
 yay -S gnome-screenshot
 gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
@@ -193,12 +187,16 @@ gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/userna
 yay -S wine wine_gecko wine-mono lutris
 
 # Favourite Packages
-yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp
+yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp tkpacman
 
 # Rank Mirrors
 yay -S reflector
 sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
+# Install android development packages
+yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
+# Add user to uucp group for mtp support (username is the user, change to the name that is required)
+sudo gpasswd -a username uucp
 
 #
 # QEMU/KVM
