@@ -104,8 +104,8 @@ systemctl enable systemd-swap
 systemctl enable fstrim.timer
 fstrim -v /
 
-# Install Desktop Enviroment
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit
+# Install Desktop Enviroment + Fonts
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
@@ -119,9 +119,6 @@ systemctl enable NetworkManager
 
 # Enable GUFW Firewall
 systemctl enable ufw
-
-# Install Fonts
-pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Exit chroot
 exit
@@ -156,11 +153,12 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
-# Install broadcom wifi drivers
-yay -S broadcom-wl
+# Favourite Packages
+yay -S broadcom-wl chromium pepper-flash chromium-widevine menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp tkpacman obs-studio
 
-# Install Chromium
-yay -S chromium pepper-flash chromium-widevine
+# Rank Mirrors
+yay -S reflector
+sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # Install jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
 yay -S jdk8-openjdk
@@ -172,21 +170,6 @@ yay -S gnome-screenshot
 mkdir -p /home/username/Pictures/Screenshots
 gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
-# Install wine + lutris
-yay -S wine wine_gecko wine-mono lutris
-
-# Favourite Packages
-yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp tkpacman obs-studio
-
-# Install android development packages
-yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
-# Add user to uucp group for mtp support (username is the user, change to the name that is required)
-sudo gpasswd -a username uucp
-
-# Rank Mirrors
-yay -S reflector
-sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
 # Disable Hibernation - create this file
 sudo gedit /etc/polkit-1/rules.d/10-disable-hibernation.rules
 
@@ -197,6 +180,17 @@ polkit.addRule(function(action, subject) {
         return polkit.Result.NO;
     }
 });
+
+# Install wine + lutris
+yay -S wine wine_gecko wine-mono lutris
+
+# Install android development packages
+yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
+# Add user to uucp group for mtp support (username is the user, change to the name that is required)
+sudo gpasswd -a username uucp
+
+
+
 
 
 #
