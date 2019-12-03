@@ -191,7 +191,7 @@ gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/userna
 yay -S wine wine_gecko wine-mono lutris
 
 # Favourite Packages
-yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen
+yay -S menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp
 
 # Rank Mirrors
 yay -S reflector
