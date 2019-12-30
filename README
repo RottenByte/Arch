@@ -200,6 +200,9 @@ sudo gpasswd -a username uucp
 # Install required packages
 yay -S qemu virt-manager dnsmasq iptables ebtables dnsmasq dmidecode ovmf
 
+# Workaround for uefi support
+sudo rm /usr/share/qemu/firmware/*edk*
+
 # Create this file for uefi ovmf support
 /etc/libvirt/qemu.conf
 
