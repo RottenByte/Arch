@@ -154,7 +154,7 @@ cd yay
 makepkg -si
 
 # Favourite Packages
-yay -S broadcom-wl chromium pepper-flash chromium-widevine menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp tkpacman obs-studio
+yay -S broadcom-wl chromium pepper-flash chromium-widevine menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp tkpacman obs-studio handbrake libdvdcss gst-libav gst-plugins-good
 
 # Rank Mirrors
 yay -S reflector
