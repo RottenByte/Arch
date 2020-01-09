@@ -9,21 +9,21 @@
 # Lists Disks
 lsblk
 
-# Wipe Disk Assuming /dev/sda is the target disk
-gdisk /dev/sda
+# Wipe Disk Assuming /dev/nvme0n1 is the target disk
+gdisk /dev/nvme0n1
 x
 z
 y
 y
 
-# Create Partitions Assuming /dev/sda is the target disk - 128M Efi System Partition - Remainder as ext4 - (No Swap Partition as using swap file)
-cfdisk /dev/sda
+# Create Partitions Assuming /dev/nvme0n1 is the target disk - 128M Efi System Partition - Remainder as ext4 - (No Swap Partition as using swap file)
+cfdisk /dev/nvme0n1
 
-# Create ESP filesystem (Assuming /dev/sda1 is the target)
-mkfs.vfat -F32 /dev/sda1
+# Create ESP filesystem (Assuming /dev/nvme0n1p1 is the target)
+mkfs.vfat -F32 /dev/nvme0n1p1
 
-# Format root filesystem as ext4 (Assuming /dev/sda2 is the target)
-mkfs.ext4 /dev/sda2
+# Format root filesystem as ext4 (Assuming /dev/nvme0n1p2 is the target)
+mkfs.ext4 /dev/nvme0n1p2
 
 # Mount Needed Partitions (Assuming /dev/sda is the target disk)
 mount /dev/sda2 /mnt
@@ -104,8 +104,11 @@ systemctl enable systemd-swap
 systemctl enable fstrim.timer
 fstrim -v /
 
-# Install Desktop Enviroment + Fonts
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gedit ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
+# Desktop Enviroment + Favourite Packages
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit htop ristretto tumbler gnome-system-monitor
+
+# Install Fonts
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
@@ -153,8 +156,8 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
-# Favourite Packages
-yay -S broadcom-wl chromium pepper-flash chromium-widevine menulibre numix-gtk-theme gnome-keyring seahorse dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc ristretto tumbler libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb gnome-system-monitor gedit openscad transmission-gtk telegram-desktop kodi htop mate-calc screen gimp tkpacman obs-studio handbrake libdvdcss gst-libav gst-plugins-good
+# Install Chromium
+yay -S chromium pepper-flash chromium-widevine
 
 # Rank Mirrors
 yay -S reflector
@@ -164,6 +167,9 @@ sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate 
 yay -S jdk8-openjdk
 archlinux-java status
 sudo archlinux-java set java-8-openjdk
+
+# My Favourite Packages
+yay -S broadcom-wl menulibre numix-gtk-theme dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb openscad transmission-gtk telegram-desktop kodi mate-calc screen gimp tkpacman obs-studio handbrake libdvdcss gst-libav gst-plugins-good
 
 # Install gnome-screenshot and set default save directory (username is the user, change to the name that is required)
 yay -S gnome-screenshot
