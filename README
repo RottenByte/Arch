@@ -25,10 +25,10 @@ mkfs.vfat -F32 /dev/nvme0n1p1
 # Format root filesystem as ext4 (Assuming /dev/nvme0n1p2 is the target)
 mkfs.ext4 /dev/nvme0n1p2
 
-# Mount Needed Partitions (Assuming /dev/sda is the target disk)
-mount /dev/sda2 /mnt
+# Mount Needed Partitions (Assuming /dev/nvme0n1 is the target disk)
+mount /dev/nvme0n1p2 /mnt
 mkdir -p /mnt/efi
-mount -o noatime /dev/sda1 /mnt/efi
+mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install as usual
 pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano inetutils git usbutils
@@ -99,6 +99,11 @@ nano /etc/systemd/swap.conf
 
 # Enable Swapfile Service
 systemctl enable systemd-swap
+
+# Set Swappiness
+nano /etc/sysctl.d/99-swappiness.conf
+
+vm.swappiness=10
 
 # SSD Only - Enable fstrim Service + run trim once
 systemctl enable fstrim.timer
