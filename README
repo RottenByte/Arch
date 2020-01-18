@@ -31,7 +31,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano inetutils git usbutils
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano inetutils git usbutils nvme-cli screen
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -110,7 +110,7 @@ systemctl enable fstrim.timer
 fstrim -v /
 
 # Desktop Enviroment + Favourite Packages
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit htop ristretto tumbler gnome-system-monitor
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit htop ristretto tumbler
 
 # Install Fonts
 pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
@@ -139,23 +139,6 @@ sudo pacman -S os-prober intel-ucode
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 efibootmgr
 
-# Install Packages For Intel Hardware Acceleration + Check It Works, and vulkan support
-sudo pacman -S libva-intel-driver libva-utils vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
-vainfo
-
-# reboot
-sudo reboot
-
-# Verify Microcode Update
-dmesg | grep microcode
-
-#
-#
-# Install Complete
-#
-#
-
-
 # Install yay
 git clone https://aur.archlinux.org/yay.git
 cd yay
@@ -163,23 +146,6 @@ makepkg -si
 
 # Install Chromium
 yay -S chromium pepper-flash chromium-widevine
-
-# Rank Mirrors
-yay -S reflector
-sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
-# Install jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
-yay -S jdk8-openjdk
-archlinux-java status
-sudo archlinux-java set java-8-openjdk
-
-# My Favourite Packages
-yay -S broadcom-wl menulibre numix-gtk-theme dconf-editor xarchiver zip unzip unrar p7zip cpio mkvtoolnix-cli mkvtoolnix-gui vlc libreoffice-fresh gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb openscad transmission-gtk telegram-desktop kodi mate-calc screen gimp tkpacman obs-studio handbrake libdvdcss gst-libav gst-plugins-good
-
-# Install gnome-screenshot and set default save directory (username is the user, change to the name that is required)
-yay -S gnome-screenshot
-mkdir -p /home/username/Pictures/Screenshots
-gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
 # Disable Hibernation - create this file
 sudo gedit /etc/polkit-1/rules.d/10-disable-hibernation.rules
@@ -192,34 +158,53 @@ polkit.addRule(function(action, subject) {
     }
 });
 
-# Install wine + lutris
-yay -S wine wine_gecko wine-mono lutris
+# Rank Mirrors
+yay -S reflector
+sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
-# Install android development packages
+# Install jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
+yay -S jdk8-openjdk
+archlinux-java status
+sudo archlinux-java set java-8-openjdk
+
+# My Favourite Essential Packages
+yay -S broadcom-wl grub-customizer menulibre numix-gtk-theme tkpacman dconf-editor xarchiver zip unzip unrar p7zip cpio gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb mate-calc openscad transmission-gtk vlc
+
+# My Favourite Useful Packages
+yay -S gnome-system-monitor kodi handbrake libdvdcss gst-libav gst-plugins-good mkvtoolnix-cli mkvtoolnix-gui gimp obs-studio telegram-desktop libreoffice-fresh
+
+# Reboot
+sudo reboot
+
+# Verify Microcode Update
+dmesg | grep microcode
+
+#
+#
+# Install Complete
+#
+#
+
+# Install gnome-screenshot and set default save directory (username is the user, change to the name that is required)
+yay -S gnome-screenshot
+mkdir -p /home/username/Pictures/Screenshots
+gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
+
+# Install android packages
 yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
 # Add user to uucp group for mtp support (username is the user, change to the name that is required)
 sudo gpasswd -a username uucp
 
 
-
-
-
+#
 #
 # QEMU/KVM
 #
+#
+
 
 # Install required packages
 yay -S qemu virt-manager dnsmasq iptables ebtables dnsmasq dmidecode ovmf
-
-# Workaround for uefi support
-sudo rm /usr/share/qemu/firmware/*edk*
-
-# Create this file for uefi ovmf support
-/etc/libvirt/qemu.conf
-
-nvram = [
-    "/usr/share/ovmf/x64/OVMF_CODE.fd:/usr/share/ovmf/x64/OVMF_VARS.fd"
-]
 
 # Add user to kvm group (username is the user, change to the name that is required)
 sudo gpasswd -a username kvm
@@ -258,11 +243,13 @@ sudo virsh net-list --all
 sudo virsh net-start default
 sudo virsh net-autostart default
 
+
 #
 #
 # Stuff
 #
 #
+
 
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
@@ -279,3 +266,6 @@ sudo pacman-key --init
 sudo pacman-key --populate archlinux
 sudo pacman-key --refresh-keys
 sudo pacman -Syu
+
+# qemu workaround for uefi support?
+sudo rm /usr/share/qemu/firmware/*edk*
