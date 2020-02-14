@@ -147,16 +147,8 @@ makepkg -si
 # Install Chromium
 yay -S chromium pepper-flash chromium-widevine
 
-# Disable Hibernation - create this file
-sudo gedit /etc/polkit-1/rules.d/10-disable-hibernation.rules
-
-polkit.addRule(function(action, subject) {
-    if (action.id == "org.freedesktop.login1.hibernate" ||
-        action.id == "org.freedesktop.login1.hibernate-multiple-sessions")
-    {
-        return polkit.Result.NO;
-    }
-});
+# Disable Hibernation
+sudo systemctl mask hibernate.target
 
 # Rank Mirrors
 yay -S reflector
