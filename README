@@ -31,7 +31,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers systemd-swap bash-completion dialog wpa_supplicant nano inetutils git usbutils nvme-cli screen
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers linux-firmware systemd-swap bash-completion dialog wpa_supplicant inetutils usbutils nvme-cli screen nano htop git
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -52,6 +52,8 @@ efibootmgr
 nano /etc/locale.gen
 # uncomment en_GB.UTF-8 + en_US.UTF-8
 locale-gen
+echo LANG=en_GB.UTF-8 > /etc/locale.conf
+export LANG=en_GB.UTF-8
 localectl set-locale LANG=en_GB.UTF-8
 timedatectl list-timezones
 timedatectl set-timezone Europe/London
@@ -75,8 +77,9 @@ nano /etc/pacman.conf
 Include = /etc/pacman.d/mirrorlist
 ----------------------------------
 
-# Test multilib
+# Test multilib + install multilib-devel
 pacman -Syu
+pacman -S multilib-devel
 
 # Setup Users (username is the user, change to the name that is required)
 passwd
@@ -105,28 +108,21 @@ nano /etc/sysctl.d/99-swappiness.conf
 
 vm.swappiness=10
 
-# SSD Only - Enable fstrim Service + run trim once
-systemctl enable fstrim.timer
-fstrim -v /
-
 # Desktop Enviroment + Favourite Packages
 pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit htop ristretto tumbler
-
-# Install Fonts
-pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
 "session=/usr/bin/cinnamon-session"
 
-# Enable LXDM Service
+# Enable Services
 systemctl enable lxdm
-
-# Enable NetworkManager Service
 systemctl enable NetworkManager
-
-# Enable GUFW Firewall
 systemctl enable ufw
+systemctl enable fstrim.timer
+
+# Disable Services
+sudo systemctl mask hibernate.target
 
 # Exit chroot
 exit
@@ -147,23 +143,19 @@ makepkg -si
 # Install Chromium
 yay -S chromium pepper-flash chromium-widevine
 
-# Disable Hibernation
-sudo systemctl mask hibernate.target
-
-# Rank Mirrors
-yay -S reflector
-sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
-# Install jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
-yay -S jdk8-openjdk
-archlinux-java status
-sudo archlinux-java set java-8-openjdk
+# Install Fonts
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # My Favourite Essential Packages
-yay -S broadcom-wl grub-customizer menulibre numix-gtk-theme tkpacman dconf-editor xarchiver zip unzip unrar p7zip cpio gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb mate-calc openscad transmission-gtk vlc
+yay -S broadcom-wl grub-customizer numix-gtk-theme tkpacman dconf-editor xarchiver zip unzip unrar p7zip cpio gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb mate-calc openscad transmission-gtk vlc
 
 # My Favourite Useful Packages
 yay -S gnome-system-monitor kodi handbrake libdvdcss gst-libav gst-plugins-good mkvtoolnix-cli mkvtoolnix-gui gimp obs-studio telegram-desktop libreoffice-fresh
+
+# Install jdk-openjdk + jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
+yay -S jdk-openjdk jdk8-openjdk
+archlinux-java status
+sudo archlinux-java set java-8-openjdk
 
 # Reboot
 sudo reboot
@@ -183,57 +175,10 @@ mkdir -p /home/username/Pictures/Screenshots
 gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
 # Install android packages
-yay -S android-tools aosp-devel lineageos-devel maven gradle libmtp gvfs-mtp android-udev
+yay -S ccache libmtp gvfs-mtp android-udev android-tools maven gradle gcc repo git gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync ccache lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs git gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt python2-virtualenv bc rsync ncurses5-compat-libs lib32-zlib lib32-ncurses lib32-readline lib32-ncurses5-compat-libs xml2 lzop pngcrush imagemagick
+
 # Add user to uucp group for mtp support (username is the user, change to the name that is required)
 sudo gpasswd -a username uucp
-
-
-#
-#
-# QEMU/KVM
-#
-#
-
-
-# Install required packages
-yay -S qemu virt-manager dnsmasq iptables ebtables dnsmasq dmidecode ovmf
-
-# Add user to kvm group (username is the user, change to the name that is required)
-sudo gpasswd -a username kvm
-
-# Create this file with kvm_intel or kvm_amd depending on your system
-/etc/modules-load.d/kvm.conf
-
-kvm_intel
-
-# load module with kvm_intel or kvm_amd depending on your system
-modprobe kvm_intel
-
-# Create polkit rule to allow users in kvm group to manage the libvirt
-daemon without authentication
-/etc/polkit-1/rules.d/50-libvirt.rules
-
-/* Allow users in kvm group to manage the libvirt
-daemon without authentication */
-polkit.addRule(function(action, subject) {
-    if (action.id == "org.libvirt.unix.manage" &&
-        subject.isInGroup("kvm")) {
-            return polkit.Result.YES;
-    }
-});
-
-# Add user to the libvirt group (username is the user, change to the name that is required)
-sudo groupadd libvirt
-sudo gpasswd -a username libvirt
-
-# Start and enable the libvirtd daemon
-sudo systemctl start libvirtd
-sudo systemctl enable libvirtd
-
-# Check and start the default network interface
-sudo virsh net-list --all
-sudo virsh net-start default
-sudo virsh net-autostart default
 
 
 #
@@ -242,6 +187,12 @@ sudo virsh net-autostart default
 #
 #
 
+# Rank Mirrors
+yay -S reflector
+sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+
+# Trim
+fstrim -v /
 
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
