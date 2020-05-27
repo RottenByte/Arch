@@ -210,5 +210,3 @@ sudo pacman-key --populate archlinux
 sudo pacman-key --refresh-keys
 sudo pacman -Syu
 
-# qemu workaround for uefi support?
-sudo rm /usr/share/qemu/firmware/*edk*
