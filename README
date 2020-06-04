@@ -105,7 +105,6 @@ systemctl enable systemd-swap
 
 # Set Swappiness
 nano /etc/sysctl.d/99-swappiness.conf
-
 vm.swappiness=10
 
 # Desktop Enviroment + Favourite Packages
@@ -147,15 +146,32 @@ yay -S chromium pepper-flash chromium-widevine
 pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # My Favourite Essential Packages
-yay -S broadcom-wl grub-customizer numix-gtk-theme tkpacman dconf-editor xarchiver zip unzip unrar p7zip cpio gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools gvfs-smb mate-calc openscad transmission-gtk vlc
+yay -S grub-customizer numix-gtk-theme gvfs-smb mate-calc vlc
 
 # My Favourite Useful Packages
-yay -S gnome-system-monitor kodi handbrake libdvdcss gst-libav gst-plugins-good mkvtoolnix-cli mkvtoolnix-gui gimp obs-studio telegram-desktop libreoffice-fresh
+yay -S gnome-system-monitor kodi handbrake libdvdcss gst-libav gst-plugins-good mkvtoolnix-gui gimp obs-studio telegram-desktop libreoffice-fresh openscad transmission-gtk
+
+# Install xarchiver and dependencies
+xarchiver zip unzip unrar p7zip cpio
+
+# Install Gparted and dependencies
+gparted f2fs-tools exfat-utils ntfs-3g udftools gpart mtools
 
 # Install jdk-openjdk + jdk8-openjdk + Set Default if needed (replace java-8-openjdk with your java version)
 yay -S jdk-openjdk jdk8-openjdk
 archlinux-java status
 sudo archlinux-java set java-8-openjdk
+
+# Optimize makepkg
+yay -S ccache pigz pbzip2
+nano /etc/makepkg.conf
+# update the following compression flags for multithreading
+MAKEFLAGS="-j$(nproc)"
+COMPRESSXZ=(xz -c -z - --threads=0)
+COMPRESSGZ=(pigz -c -f -n)
+COMPRESSBZ2=(pbzip2 -c -f)
+COMPRESSZST=(zstd -c -z -q - --threads=0)
+
 
 # Reboot
 sudo reboot
