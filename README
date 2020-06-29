@@ -108,7 +108,7 @@ nano /etc/sysctl.d/99-swappiness.conf
 vm.swappiness=10
 
 # Desktop Enviroment + Favourite Packages
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit htop ristretto tumbler
+pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit gnome-system-monitor ristretto tumbler
 
 # Edit LXDM Config for cinnamon
 nano /etc/lxdm/lxdm.conf
@@ -149,7 +149,7 @@ pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra not
 yay -S grub-customizer numix-gtk-theme gvfs-smb mate-calc vlc
 
 # My Favourite Useful Packages
-yay -S gnome-system-monitor kodi handbrake libdvdcss gst-libav gst-plugins-good mkvtoolnix-gui gimp obs-studio telegram-desktop libreoffice-fresh openscad transmission-gtk
+yay -S kodi handbrake libdvdcss gst-libav gst-plugins-good mkvtoolnix-gui gimp obs-studio telegram-desktop libreoffice-fresh openscad transmission-gtk
 
 # Install xarchiver and dependencies
 xarchiver zip unzip unrar p7zip cpio
@@ -202,6 +202,9 @@ sudo gpasswd -a username uucp
 # Stuff
 #
 #
+
+# Full Colour Range
+xrandr --output HDMI-3 --set "Broadcast RGB" "Full"
 
 # Rank Mirrors
 yay -S reflector
