@@ -121,7 +121,7 @@ systemctl enable ufw
 systemctl enable fstrim.timer
 
 # Disable Services
-sudo systemctl mask hibernate.target
+systemctl mask hibernate.target
 
 # Exit chroot
 exit
