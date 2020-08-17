@@ -108,14 +108,13 @@ nano /etc/sysctl.d/99-swappiness.conf
 vm.swappiness=10
 
 # Desktop Enviroment + Favourite Packages
-pacman -S cinnamon lxdm-gtk3 xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit gnome-system-monitor ristretto tumbler
+pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit gnome-system-monitor ristretto tumbler
 
-# Edit LXDM Config for cinnamon
-nano /etc/lxdm/lxdm.conf
-"session=/usr/bin/cinnamon-session"
+# Install Fonts
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Enable Services
-systemctl enable lxdm
+systemctl enable lightdm
 systemctl enable NetworkManager
 systemctl enable ufw
 systemctl enable fstrim.timer
@@ -141,9 +140,6 @@ makepkg -si
 
 # Install Chromium
 yay -S chromium pepper-flash chromium-widevine
-
-# Install Fonts
-pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # My Favourite Essential Packages
 yay -S grub-customizer numix-gtk-theme gvfs-smb mate-calc vlc
