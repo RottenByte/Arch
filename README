@@ -163,9 +163,9 @@ yay -S ccache pigz pbzip2
 nano /etc/makepkg.conf
 # update the following compression flags for multithreading
 MAKEFLAGS="-j$(nproc)"
-COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSGZ=(pigz -c -f -n)
 COMPRESSBZ2=(pbzip2 -c -f)
+COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSZST=(zstd -c -z -q - --threads=0)
 
 
