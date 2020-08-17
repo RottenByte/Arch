@@ -55,9 +55,9 @@ locale-gen
 echo LANG=en_GB.UTF-8 > /etc/locale.conf
 export LANG=en_GB.UTF-8
 localectl set-locale LANG=en_GB.UTF-8
-timedatectl list-timezones
-timedatectl set-timezone Europe/London
-hwclock --systohc
+ls /usr/share/zoneinfo/
+ln -s /usr/share/zoneinfo/Europe/London > /etc/localtime
+hwclock --systohc --utc
 
 # Set Hostname (hostnamehere is the hostname)
 echo hostnamehere > /etc/hostname
