@@ -108,7 +108,7 @@ nano /etc/sysctl.d/99-swappiness.conf
 vm.swappiness=10
 
 # Desktop Enviroment + Favourite Packages
-pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit gnome-system-monitor ristretto tumbler
+pacman -S xorg-server lightdm lightdm-settings lightdm-gtk-greeter cinnamon xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit gnome-system-monitor ristretto tumbler
 
 # Install Fonts
 pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
@@ -187,7 +187,7 @@ mkdir -p /home/username/Pictures/Screenshots
 gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
 # Install android packages
-yay -S ccache libmtp gvfs-mtp android-udev android-tools maven gradle gcc repo git gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync ccache lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs git gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt python2-virtualenv bc rsync ncurses5-compat-libs lib32-zlib lib32-ncurses lib32-readline lib32-ncurses5-compat-libs xml2 lzop pngcrush imagemagick
+yay -S ccache libmtp gvfs-mtp android-udev android-tools maven gradle gcc repo gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync ccache lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt python2-virtualenv bc rsync ncurses5-compat-libs lib32-zlib lib32-ncurses lib32-readline lib32-ncurses5-compat-libs xml2 lzop pngcrush imagemagick
 
 # Add user to uucp group for mtp support (username is the user, change to the name that is required)
 sudo gpasswd -a username uucp
@@ -204,7 +204,7 @@ xrandr --output HDMI-3 --set "Broadcast RGB" "Full"
 
 # Rank Mirrors
 yay -S reflector
-sudo reflector --country "United Kingdom" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+sudo reflector -c GB
 
 # Trim
 fstrim -v /
