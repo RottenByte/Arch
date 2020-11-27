@@ -31,7 +31,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers linux-firmware systemd-swap bash-completion dialog wpa_supplicant inetutils usbutils nvme-cli screen nano htop git
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr linux linux-headers linux-firmware systemd-swap bash-completion wpa_supplicant usbutils nvme-cli screen nano htop git iwd dialog
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
