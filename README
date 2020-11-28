@@ -30,8 +30,8 @@ mount /dev/nvme0n1p2 /mnt
 mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
-# Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog usbutils nvme-cli nano htop git networkmanager ttf-dejavu ttf-opensans ttf-liberation plasma-desktop plasma-wayland-session kwayland-integration kwayland-server kde-gtk-config kdeplasma-addons kmenuedit kscreen kscreenlocker kwallet-pam libkscreen plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager konsole kdenetwork-filesharing kdegraphics-thumbnailers ffmpegthumbs kcalc samba gufw bluedevil bluez bluez-utils gst-libav gst-plugins-good gst-plugins-ugly gst-plugins-bad
+# Install
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog usbutils nvme-cli nano htop
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -83,6 +83,9 @@ EDITOR=nano visudo
 Defaults rootpw
 ----------------------------------
 
+# Install Essentials + KDE
+pacman -S networkmanager bluez bluez-utils bluedevil ttf-dejavu ttf-opensans ttf-liberation plasma-desktop plasma-wayland-session kwayland-integration kwayland-server kde-gtk-config kdeplasma-addons kmenuedit kscreen kscreenlocker plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager polkit-kde-agent kwallet-pam konsole khotkeys kdenetwork-filesharing samba kdegraphics-thumbnailers ffmpegthumbs gst-libav gst-plugins-good gst-plugins-ugly gst-plugins-bad git gufw kcalc knetattach ksysguard
+
 # Enable Services
 systemctl enable fstrim.timer
 systemctl enable sddm
@@ -106,7 +109,7 @@ yay -S reflector
 sudo reflector -c GB
 
 # Install Useful Packages
-yay -S chromium pepper-flash chromium-widevine vlc telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs dosfstools udftools jdk-openjdk
+yay -S chromium pepper-flash chromium-widevine vlc telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk
 
 # Optimize makepkg
 yay -S pigz pbzip2
