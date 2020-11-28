@@ -31,7 +31,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install as usual
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog usbutils nvme-cli nano htop git networkmanager ttf-dejavu ttf-opensans ttf-liberation plasma-desktop plasma-wayland-session kwayland-integration kwayland-server kde-gtk-config kdeplasma-addons kmenuedit kscreen kscreenlocker kwallet-pam libkscreen plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager konsole kdenetwork-filesharing kdegraphics-thumbnailers ffmpegthumbs kcalc samba gufw bluedevil bluez bluez-utils
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog usbutils nvme-cli nano htop git networkmanager ttf-dejavu ttf-opensans ttf-liberation plasma-desktop plasma-wayland-session kwayland-integration kwayland-server kde-gtk-config kdeplasma-addons kmenuedit kscreen kscreenlocker kwallet-pam libkscreen plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager konsole kdenetwork-filesharing kdegraphics-thumbnailers ffmpegthumbs kcalc samba gufw bluedevil bluez bluez-utils gst-libav gst-plugins-good gst-plugins-ugly gst-plugins-bad
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
