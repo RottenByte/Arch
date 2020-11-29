@@ -102,11 +102,9 @@ EDITOR=nano visudo
 Defaults rootpw
 ----------------------------------
 
-# Install Cinnamon
-pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry gedit ristretto tumbler
+# Install Cinnamon + Basics
+pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry gedit ristretto tumbler reflector pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-emoji
 
-# Install Fonts
-pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-emoji
 
 # Enable Services
 systemctl enable fstrim.timer
@@ -121,18 +119,17 @@ exit
 # Reboot + Remove Arch USB
 reboot
 
+# Rank Mirrors
+sudo reflector -c GB
+
 # Install git + yay
 sudo pacman -S git
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
-# Rank Mirrors
-yay -S reflector
-sudo reflector -c GB
-
 # Install Useful Packages
-yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk obs-studio gitkraken visual-studio-code-bin libreoffice-fresh
+yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk gitkraken visual-studio-code-bin libreoffice-fresh
 
 # Install gnome-screenshot
 yay -S gnome-screenshot
