@@ -84,14 +84,14 @@ Defaults rootpw
 ----------------------------------
 
 # Install Cinnamon
-pacman -S xorg-server lightdm lightdm-gtk-greeter-settings lightdm-gtk-greeter cinnamon xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit ristretto tumbler networkmanager bluez bluez-utils blueberry
+pacman -S networkmanager bluez bluez-utils bluedevil plasma-desktop plasma-wayland-session kdeplasma-addons kde-gtk-config kmenuedit kscreen kscreenlocker plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager polkit-kde-agent kwallet-pam konsole khotkeys kdenetwork-filesharing samba kdegraphics-thumbnailers ffmpegthumbs gst-libav gst-plugins-good gst-plugins-ugly gst-plugins-bad gufw kcalc knetattach ksysguard
 
 # Install Fonts
 pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Enable Services
 systemctl enable fstrim.timer
-systemctl enable lightdm
+systemctl enable sddm
 systemctl enable NetworkManager
 systemctl enable ufw
 systemctl enable bluetooth
@@ -113,16 +113,11 @@ yay -S reflector
 sudo reflector -c GB
 
 # Install Useful Packages
-yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor obs-studio  htop grub-customizer numix-gtk-theme gvfs-smb mate-calc transmission-gtk
- 
-# Install gnome-screenshot and set default save directory (username is the user, change to the name that is required)
-yay -S gnome-screenshot
-mkdir -p /home/username/Pictures/Screenshots
-gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
+yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk obs-studio htop grub-customizer transmission-gtk
 
 # Optimize makepkg
 yay -S pigz pbzip2
-nano /etc/makepkg.conf
+sudo nano /etc/makepkg.conf
 # update the following compression flags for multithreading
 MAKEFLAGS="-j$(nproc)"
 COMPRESSGZ=(pigz -c -f -n)
@@ -131,7 +126,7 @@ COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSZST=(zstd -c -z -q - --threads=0)
 
 # Create /swapfile + Set Swappiness
-dd if=/dev/zero of=/swapfile bs=1M count=8192 status=progress
+sudo dd if=/dev/zero of=/swapfile bs=1M count=8192 status=progress
 chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile
