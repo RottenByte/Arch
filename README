@@ -72,7 +72,7 @@ pacman -Syu
 
 # Setup Users (username is the user, change to the name that is required)
 passwd
-useradd -m -g users -G wheel -s /bin/bash username
+useradd -m -g users -G wheel,uucp -s /bin/bash username
 passwd username
 
 # setup sudo for group "wheel" using the root password - must use "EDITOR=nano visudo" command
@@ -83,15 +83,15 @@ EDITOR=nano visudo
 Defaults rootpw
 ----------------------------------
 
-# Install KDE + Essentials
-pacman -S networkmanager bluez bluez-utils bluedevil plasma-desktop plasma-wayland-session kdeplasma-addons kde-gtk-config kmenuedit kscreen kscreenlocker plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager polkit-kde-agent kwallet-pam konsole khotkeys kdenetwork-filesharing samba kdegraphics-thumbnailers ffmpegthumbs gst-libav gst-plugins-good gst-plugins-ugly gst-plugins-bad gufw kcalc knetattach ksysguard
+# Install Cinnamon
+pacman -S xorg-server lightdm lightdm-gtk-greeter-settings lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry gedit ristretto tumbler
 
 # Install Fonts
 pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Enable Services
 systemctl enable fstrim.timer
-systemctl enable sddm
+systemctl enable lightdm
 systemctl enable NetworkManager
 systemctl enable ufw
 systemctl enable bluetooth
@@ -102,7 +102,7 @@ exit
 # Reboot + Remove Arch USB
 reboot
 
-# Install yay
+# Install git + yay
 sudo pacman -S git
 git clone https://aur.archlinux.org/yay.git
 cd yay
@@ -113,7 +113,12 @@ yay -S reflector
 sudo reflector -c GB
 
 # Install Useful Packages
-yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk obs-studio htop grub-customizer transmission-gtk
+yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk obs-studio
+
+# Install gnome-screenshot
+yay -S gnome-screenshot
+mkdir -p /home/username/Pictures/Screenshots
+gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
 # Optimize makepkg
 yay -S pigz pbzip2
@@ -127,12 +132,12 @@ COMPRESSZST=(zstd -c -z -q - --threads=0)
 
 # Create /swapfile + Set Swappiness
 sudo dd if=/dev/zero of=/swapfile bs=1M count=8192 status=progress
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-nano /etc/fstab
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo nano /etc/fstab
 /swapfile none swap defaults 0 0
-nano /etc/sysctl.d/99-swappiness.conf
+sudo nano /etc/sysctl.d/99-swappiness.conf
 vm.swappiness=10
 
 # Verify Microcode Update
@@ -147,10 +152,8 @@ sudo reboot
 #
 #
 
-# Install android packages
-yay -S libmtp android-udev android-tools multilib-devel ccache maven gradle gcc repo gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync ccache lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch libxslt python2-virtualenv bc rsync lib32-zlib lib32-ncurses lib32-readline xml2 lzop pngcrush imagemagick
-# Add user to uucp group for mtp support (username is the user, change to the name that is required)
-sudo gpasswd -a username uucp
+# Compile Android
+yay -S multilib-devel ccache maven gradle gcc repo gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync ccache lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch libxslt python2-virtualenv bc rsync lib32-zlib lib32-ncurses lib32-readline xml2 lzop pngcrush imagemagick
 
 # Setup systemd-swap
 yay -S systemd-swap
