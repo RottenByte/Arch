@@ -16,7 +16,7 @@ z
 y
 y
 
-# Create Partitions Assuming /dev/nvme0n1 is the target disk - 128M Efi System Partition - Remainder as ext4
+# Create Partitions Assuming /dev/nvme0n1 is the target disk - /efi 128M - / ext4 - Swap
 cfdisk /dev/nvme0n1
 
 # Create ESP filesystem (Assuming /dev/nvme0n1p1 is the target)
@@ -24,6 +24,10 @@ mkfs.vfat -F32 /dev/nvme0n1p1
 
 # Format root filesystem as ext4 (Assuming /dev/nvme0n1p2 is the target)
 mkfs.ext4 /dev/nvme0n1p2
+
+# Setup Swap
+mkswap /dev/nvme0n1p3
+swapon /dev/nvme0n1p3
 
 # Mount Needed Partitions (Assuming /dev/nvme0n1 is the target disk)
 mount /dev/nvme0n1p2 /mnt
@@ -39,10 +43,23 @@ genfstab -pU /mnt >> /mnt/etc/fstab
 # Chroot
 arch-chroot /mnt /bin/bash
 
-# Grub install
+# Grub Install
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
+
+# Add resume=UUID= kernel parameter with uuid of swap partition
+lsblk -f
+nano /etc/default/grub
 # Generate grub.cfg
 grub-mkconfig -o /boot/grub/grub.cfg
+# Hibernation
+nano /etc/mkinitcpio.conf
+# add "resume" to HOOKS so it looks like the looks like the following for example
+----------------------------------
+HOOKS=(base udev autodetect keyboard modconf block filesystems resume fsck)
+----------------------------------
+# Regenerate initramfs
+mkinitcpio -P
+
 # Check efi entries
 efibootmgr
 
@@ -53,7 +70,9 @@ locale-gen
 echo LANG=en_GB.UTF-8 > /etc/locale.conf
 export LANG=en_GB.UTF-8
 ls /usr/share/zoneinfo/
-ln -sf /usr/share/zoneinfo/GB > /etc/localtime
+ln -sf /usr/share/zoneinfo/Europe/London > /etc/localtime
+timedatectl list-timezones
+timedatectl set-timezone Europe/London
 hwclock --systohc
 
 # Set Hostname (hostnamehere is the hostname)
@@ -130,13 +149,7 @@ COMPRESSBZ2=(pbzip2 -c -f)
 COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSZST=(zstd -c -z -q - --threads=0)
 
-# Create /swapfile + Set Swappiness
-sudo dd if=/dev/zero of=/swapfile bs=1M count=8192 status=progress
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-sudo nano /etc/fstab
-/swapfile none swap defaults 0 0
+# Set Swappiness
 sudo nano /etc/sysctl.d/99-swappiness.conf
 vm.swappiness=10
 
@@ -155,15 +168,6 @@ sudo reboot
 # Compile Android
 yay -S multilib-devel ccache maven gradle gcc repo gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync ccache lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch libxslt python2-virtualenv bc rsync lib32-zlib lib32-ncurses lib32-readline xml2 lzop pngcrush imagemagick
 
-# Setup systemd-swap
-yay -S systemd-swap
-# Edit Swapfile Config
-sudo nano /etc/systemd/swap.conf
-"swapfc_enabled=1"
-"swapfc_force_preallocated=1"
-# Enable systemd-swap
-sudo systemctl enable systemd-swap
-
 #
 #
 # Stuff
@@ -175,7 +179,6 @@ xrandr --output HDMI-3 --set "Broadcast RGB" "Full"
 
 # Trim
 fstrim -v /
-fstrim -v /boot
 
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
