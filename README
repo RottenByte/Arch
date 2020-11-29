@@ -84,10 +84,10 @@ Defaults rootpw
 ----------------------------------
 
 # Install Cinnamon
-pacman -S xorg-server lightdm lightdm-gtk-greeter-settings lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry gedit ristretto tumbler
+pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry gedit ristretto tumbler
 
 # Install Fonts
-pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-emoji
 
 # Enable Services
 systemctl enable fstrim.timer
@@ -113,7 +113,7 @@ yay -S reflector
 sudo reflector -c GB
 
 # Install Useful Packages
-yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk obs-studio
+yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk obs-studio gitkraken visual-studio-code-bin libreoffice-fresh
 
 # Install gnome-screenshot
 yay -S gnome-screenshot
