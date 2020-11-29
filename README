@@ -31,7 +31,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog usbutils nvme-cli nano htop
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog usbutils nvme-cli nano
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -83,12 +83,15 @@ EDITOR=nano visudo
 Defaults rootpw
 ----------------------------------
 
-# Install Essentials + KDE
-pacman -S networkmanager bluez bluez-utils bluedevil ttf-dejavu ttf-opensans ttf-liberation plasma-desktop plasma-wayland-session kwayland-integration kwayland-server kde-gtk-config kdeplasma-addons kmenuedit kscreen kscreenlocker plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager polkit-kde-agent kwallet-pam konsole khotkeys kdenetwork-filesharing samba kdegraphics-thumbnailers ffmpegthumbs gst-libav gst-plugins-good gst-plugins-ugly gst-plugins-bad git gufw kcalc knetattach ksysguard
+# Install Cinnamon
+pacman -S xorg-server lightdm lightdm-gtk-greeter-settings lightdm-gtk-greeter cinnamon xfce4-terminal networkmanager gufw gnome-keyring seahorse gedit ristretto tumbler networkmanager bluez bluez-utils blueberry
+
+# Install Fonts
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 # Enable Services
 systemctl enable fstrim.timer
-systemctl enable sddm
+systemctl enable lightdm
 systemctl enable NetworkManager
 systemctl enable ufw
 systemctl enable bluetooth
@@ -100,6 +103,7 @@ exit
 reboot
 
 # Install yay
+sudo pacman -S git
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
@@ -109,7 +113,12 @@ yay -S reflector
 sudo reflector -c GB
 
 # Install Useful Packages
-yay -S chromium pepper-flash chromium-widevine vlc telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk
+yay -S chromium pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor obs-studio  htop grub-customizer numix-gtk-theme gvfs-smb mate-calc transmission-gtk
+ 
+# Install gnome-screenshot and set default save directory (username is the user, change to the name that is required)
+yay -S gnome-screenshot
+mkdir -p /home/username/Pictures/Screenshots
+gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
 # Optimize makepkg
 yay -S pigz pbzip2
@@ -151,11 +160,11 @@ sudo gpasswd -a username uucp
 # Setup systemd-swap
 yay -S systemd-swap
 # Edit Swapfile Config
-nano /etc/systemd/swap.conf
+sudo nano /etc/systemd/swap.conf
 "swapfc_enabled=1"
 "swapfc_force_preallocated=1"
 # Enable systemd-swap
-systemctl enable systemd-swap
+sudo systemctl enable systemd-swap
 
 #
 #
