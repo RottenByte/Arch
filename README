@@ -83,7 +83,7 @@ EDITOR=nano visudo
 Defaults rootpw
 ----------------------------------
 
-# Install Cinnamon
+# Install KDE + Essentials
 pacman -S networkmanager bluez bluez-utils bluedevil plasma-desktop plasma-wayland-session kdeplasma-addons kde-gtk-config kmenuedit kscreen kscreenlocker plasma-nm plasma-pa powerdevil sddm-kcm systemsettings dolphin dolphin-plugins kwalletmanager polkit-kde-agent kwallet-pam konsole khotkeys kdenetwork-filesharing samba kdegraphics-thumbnailers ffmpegthumbs gst-libav gst-plugins-good gst-plugins-ugly gst-plugins-bad gufw kcalc knetattach ksysguard
 
 # Install Fonts
