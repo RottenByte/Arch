@@ -156,6 +156,10 @@ vm.swappiness=10
 # Verify Microcode Update
 dmesg | grep microcode
 
+# Goodix touchscreen
+yay -S goodix-touchscreen-dkms-git
+sudo mkinitcpio -P
+
 # Reboot
 sudo reboot
 
