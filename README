@@ -103,7 +103,7 @@ Defaults rootpw
 ----------------------------------
 
 # Install Cinnamon + Basics
-pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry gedit ristretto tumbler reflector pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-emoji
+pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry ristretto tumbler reflector pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-emoji
 
 
 # Enable Services
@@ -132,7 +132,7 @@ makepkg -si
 yay -S chromium 
 
 # Install Useful Packages
-yay -S pepper-flash chromium-widevine vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk gitkraken visual-studio-code-bin libreoffice-fresh
+yay -S pepper-flash chromium-widevine gedit vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk gitkraken visual-studio-code-bin libreoffice-fresh
 
 # Install gnome-screenshot
 yay -S gnome-screenshot
@@ -141,8 +141,8 @@ gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/userna
 
 # Optimize makepkg
 yay -S pigz pbzip2
-sudo nano /etc/makepkg.conf
-# update the following compression flags for multithreading
+sudo gedit /etc/makepkg.conf
+# update the following flags for multithreading
 MAKEFLAGS="-j$(nproc)"
 COMPRESSGZ=(pigz -c -f -n)
 COMPRESSBZ2=(pbzip2 -c -f)
@@ -150,7 +150,7 @@ COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSZST=(zstd -c -z -q - --threads=0)
 
 # Set Swappiness
-sudo nano /etc/sysctl.d/99-swappiness.conf
+sudo gedit /etc/sysctl.d/99-swappiness.conf
 vm.swappiness=10
 
 # Verify Microcode Update
