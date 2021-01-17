@@ -103,7 +103,7 @@ Defaults rootpw
 ----------------------------------
 
 # Install Cinnamon + Basics
-pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry ristretto tumbler reflector pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-emoji
+pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry ristretto tumbler reflectorttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 
 # Enable Services
@@ -132,7 +132,7 @@ makepkg -si
 yay -S chromium 
 
 # Install Useful Packages
-yay -S pepper-flash chromium-widevine gedit vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk gitkraken visual-studio-code-bin libreoffice-fresh
+yay -S pepper-flash chromium-widevine gedit vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk gitkraken visual-studio-code-bin libreoffice-fresh neofetch
 
 # Install gnome-screenshot
 yay -S gnome-screenshot
