@@ -103,7 +103,7 @@ Defaults rootpw
 ----------------------------------
 
 # Install Cinnamon + Basics
-pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry ristretto tumbler reflectorttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
+pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry ristretto tumbler reflector ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
 
 
 # Enable Services
