@@ -35,7 +35,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog usbutils nvme-cli nano
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog inetutils usbutils nvme-cli nano
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
