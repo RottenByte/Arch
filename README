@@ -170,7 +170,7 @@ sudo reboot
 #
 
 # Compile Android
-yay -S multilib-devel ccache maven gradle gcc repo gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch libxslt python2-virtualenv bc rsync lib32-zlib lib32-ncurses lib32-readline xml2 lzop pngcrush imagemagick
+yay -S multilib-devel ccache maven gradle gcc repo gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch libxslt python2-virtualenv bc rsync lib32-zlib lib32-ncurses lib32-readline lzop pngcrush imagemagick
 
 #
 #
