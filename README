@@ -1,8 +1,6 @@
 #
 #
-# Everything here is for my own use, be careful if you don't know what you are doing.
-#
-# This is for a UEFI install only.
+# Arch Linux GRUB UEFI Installation Notes
 #
 #
 
@@ -35,7 +33,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion wpa_supplicant iwd dialog inetutils usbutils nvme-cli nano
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion inetutils usbutils nvme-cli nano git
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -73,7 +71,6 @@ ls /usr/share/zoneinfo/
 ln -sf /usr/share/zoneinfo/Europe/London > /etc/localtime
 timedatectl list-timezones
 timedatectl set-timezone Europe/London
-hwclock --systohc
 
 # Set Hostname (hostnamehere is the hostname)
 echo hostnamehere > /etc/hostname
@@ -91,7 +88,7 @@ pacman -Syu
 
 # Setup Users (username is the user, change to the name that is required)
 passwd
-useradd -m -g users -G wheel,uucp -s /bin/bash username
+useradd -m -g users -G wheel -s /bin/bash username
 passwd username
 
 # setup sudo for group "wheel" using the root password - must use "EDITOR=nano visudo" command
@@ -102,42 +99,52 @@ EDITOR=nano visudo
 Defaults rootpw
 ----------------------------------
 
-# Install Cinnamon + Basics
-pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gnome-keyring seahorse networkmanager gufw bluez bluez-utils blueberry ristretto tumbler reflector ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
-
-
-# Enable Services
-systemctl enable fstrim.timer
+# Setup Cinnamon
+pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal networkmanager gvfs-smb gnome-keyring seahorse ristretto tumbler gedit htop
 systemctl enable lightdm
 systemctl enable NetworkManager
+
+# Firewall
+pacman -S gufw
 systemctl enable ufw
+
+# Fonts
+pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
+
+# Bluetooth
+pacman -S bluez bluez-utils blueberry
 systemctl enable bluetooth
 
 # Exit chroot
 exit
 
-# Reboot + Remove Arch USB
+# Reboot
 reboot
 
-# Rank Mirrors
-sudo reflector -c GB
+#
+#
+# Almost There
+#
+#
 
-# Install git + yay
-sudo pacman -S git
+# Install yay
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
-# Install chromium
+# Install Chromium
 yay -S chromium 
 
 # Install Useful Packages
-yay -S pepper-flash chromium-widevine gedit vlc libdvdcss telegram-desktop gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor htop grub-customizer numix-gtk-theme gvfs-smb gvfs-mtp libmtp android-udev android-tools mate-calc transmission-gtk gitkraken visual-studio-code-bin libreoffice-fresh neofetch
+yay -S vlc libdvdcss gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor grub-customizer numix-gtk-theme mate-calc libreoffice-fresh neofetch
 
 # Install gnome-screenshot
 yay -S gnome-screenshot
 mkdir -p /home/username/Pictures/Screenshots
 gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
+
+# Install Android Stuff
+yay -S multilib-devel aosp-devel lineageos-devel gradle maven gvfs-mtp libmtp android-udev android-tools
 
 # Optimize makepkg
 yay -S pigz pbzip2
@@ -149,48 +156,36 @@ COMPRESSBZ2=(pbzip2 -c -f)
 COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSZST=(zstd -c -z -q - --threads=0)
 
-# Set Swappiness
-sudo gedit /etc/sysctl.d/99-swappiness.conf
-vm.swappiness=10
+# TRIM Weekly
+systemctl enable fstrim.timer
+
+# Rank Mirrors
+yay -S reflector
+sudo reflector -c GB
+
+# ZRam
+yay -S zramd
+sudo systemctl enable zramd
 
 # Verify Microcode Update
 dmesg | grep microcode
-
-# Goodix touchscreen
-yay -S goodix-touchscreen-dkms-git
-sudo mkinitcpio -P
 
 # Reboot
 sudo reboot
 
 #
 #
-# Install Complete
+# Enjoy
 #
 #
 
-# Compile Android
-yay -S multilib-devel ccache maven gradle gcc repo gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync lib32-zlib lib32-ncurses lib32-readline ncurses5-compat-libs lib32-ncurses5-compat-libs lib32-gcc-libs gnupg flex bison gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch libxslt python2-virtualenv bc rsync lib32-zlib lib32-ncurses lib32-readline lzop pngcrush imagemagick
-
-#
-#
-# Stuff
-#
-#
+# Goodix touchscreen
+yay -S goodix-touchscreen-dkms-git
+sudo mkinitcpio -P
 
 # Full Colour Range
 xrandr --output HDMI-3 --set "Broadcast RGB" "Full"
 
-# Trim
-fstrim -v /
-
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
-
-# Nuke GnuPG
-sudo rm -fr /etc/pacman.d/gnupg
-sudo pacman-key --init
-sudo pacman-key --populate archlinux
-sudo pacman-key --refresh-keys
-sudo pacman -Syu
 
