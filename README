@@ -33,7 +33,7 @@ mkdir -p /mnt/efi
 mount -o noatime /dev/nvme0n1p1 /mnt/efi
 
 # Install
-pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion inetutils usbutils nvme-cli nano git
+pacstrap /mnt base base-devel grub-efi-x86_64 efibootmgr os-prober intel-ucode linux linux-headers linux-firmware bash-completion inetutils usbutils nvme-cli nano htop
 
 # Create fstab
 genfstab -pU /mnt >> /mnt/etc/fstab
@@ -44,19 +44,8 @@ arch-chroot /mnt /bin/bash
 # Grub Install
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
 
-# Add resume=UUID= kernel parameter with uuid of swap partition
-lsblk -f
-nano /etc/default/grub
 # Generate grub.cfg
 grub-mkconfig -o /boot/grub/grub.cfg
-# Hibernation
-nano /etc/mkinitcpio.conf
-# add "resume" to HOOKS so it looks like the looks like the following for example
-----------------------------------
-HOOKS=(base udev autodetect keyboard modconf block filesystems resume fsck)
-----------------------------------
-# Regenerate initramfs
-mkinitcpio -P
 
 # Check efi entries
 efibootmgr
@@ -99,21 +88,9 @@ EDITOR=nano visudo
 Defaults rootpw
 ----------------------------------
 
-# Setup Cinnamon
-pacman -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal networkmanager gvfs-smb gnome-keyring seahorse ristretto tumbler gedit htop
-systemctl enable lightdm
+# Setup NetworkManager
+pacman -S networkmanager
 systemctl enable NetworkManager
-
-# Firewall
-pacman -S gufw
-systemctl enable ufw
-
-# Fonts
-pacman -S ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
-
-# Bluetooth
-pacman -S bluez bluez-utils blueberry
-systemctl enable bluetooth
 
 # Exit chroot
 exit
@@ -123,28 +100,19 @@ reboot
 
 #
 #
-# Almost There
+# Some Useful Stuff
 #
 #
 
 # Install yay
+sudo pacman -S git
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
-# Install Chromium
-yay -S chromium 
-
-# Install Useful Packages
-yay -S vlc libdvdcss gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gnome-system-monitor grub-customizer numix-gtk-theme mate-calc libreoffice-fresh neofetch
-
-# Install gnome-screenshot
-yay -S gnome-screenshot
-mkdir -p /home/username/Pictures/Screenshots
-gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
-
-# Install Android Stuff
-yay -S multilib-devel aosp-devel lineageos-devel gradle maven gvfs-mtp libmtp android-udev android-tools
+# Rank Mirrors
+yay -S reflector
+sudo reflector -c GB
 
 # Optimize makepkg
 yay -S pigz pbzip2
@@ -156,28 +124,46 @@ COMPRESSBZ2=(pbzip2 -c -f)
 COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSZST=(zstd -c -z -q - --threads=0)
 
-# TRIM Weekly
+# TRIM Weekly + Now
 systemctl enable fstrim.timer
+sudo fstrim -v /efi
+sudo fstrim -v /
 
-# Rank Mirrors
-yay -S reflector
-sudo reflector -c GB
+# Android Stuff
+yay -S multilib-devel aosp-devel lineageos-devel gradle maven android-udev android-tools
 
-# ZRam
-yay -S zramd
-sudo systemctl enable zramd
+#
+#
+# Cinnamon
+#
+#
 
-# Verify Microcode Update
-dmesg | grep microcode
+# Setup Cinnamon
+yay -S xorg-server lightdm lightdm-gtk-greeter cinnamon xfce4-terminal gvfs-smb gvfs-mtp libmtp gnome-keyring seahorse gufw bluez bluez-utils blueberry ristretto tumbler gedit ttf-dejavu ttf-opensans ttf-liberation noto-fonts noto-fonts-extra noto-fonts-emoji
+sudo systemctl enable lightdm
+sudo systemctl enable ufw
+sudo systemctl enable bluetooth
+
+# Setup GNOME Screenshot
+yay -S gnome-screenshot
+mkdir -p /home/username/Pictures/Screenshots
+gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
 # Reboot
 sudo reboot
 
 #
 #
-# Enjoy
+# Some Random Stuff
 #
 #
+
+# Useful Packages
+yay -S chromium vlc libdvdcss gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk grub-customizer numix-gtk-theme mate-calc libreoffice-fresh neofetch
+
+# ZRam
+yay -S zramd
+sudo systemctl enable zramd
 
 # Goodix touchscreen
 yay -S goodix-touchscreen-dkms-git
@@ -188,4 +174,3 @@ xrandr --output HDMI-3 --set "Broadcast RGB" "Full"
 
 # Show CPU Freq
 watch -n 0 grep \"cpu MHz\" /proc/cpuinfo
-
