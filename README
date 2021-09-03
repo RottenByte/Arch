@@ -149,9 +149,6 @@ yay -S gnome-screenshot
 mkdir -p /home/username/Pictures/Screenshots
 gsettings set org.gnome.gnome-screenshot auto-save-directory file:///home/username/Pictures/Screenshots
 
-# Reboot
-sudo reboot
-
 #
 #
 # Some Random Stuff
@@ -159,7 +156,10 @@ sudo reboot
 #
 
 # Useful Packages
-yay -S chromium vlc libdvdcss gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk grub-customizer numix-gtk-theme mate-calc libreoffice-fresh neofetch
+yay -S chromium vlc libdvdcss gparted gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk grub-customizer numix-gtk-theme mate-calc libreoffice-fresh
+
+# Meme
+yay -S neofetch
 
 # ZRam
 yay -S zramd
